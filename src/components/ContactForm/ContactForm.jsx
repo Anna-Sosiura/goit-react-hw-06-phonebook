@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form, AddBtn, Label, Input } from './ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from 'nanoid';
@@ -12,25 +12,16 @@ const ContactForm = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  // }
-
-  // const ContactForm = ({ onSubmit }) => {
-  //   const [name, setName] = useState('');
-  //   const [number, setNumber] = useState('');
-
-  // const addId = () => {
-  //   return nanoid();
-  // };
 
   const handleSubmit = e => {
     e.preventDefault();
-    // const data = { name, number };
-    // onSubmit(data);
     const resetForm = () => {
       setName('');
       setNumber('');
     };
-    const isContact = contacts.find(el => el.name === name);
+    const isContact = contacts.find(
+      el => el.name.toLowerCase() === name.toLowerCase()
+    );
 
     if (isContact) {
       Notify.info(`Such contact already exists`);
@@ -40,6 +31,9 @@ const ContactForm = () => {
 
     resetForm();
   };
+  useEffect(() => {
+    contacts && localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
   const hendleChange = e => {
     const { value, name } = e.currentTarget;
@@ -56,7 +50,6 @@ const ContactForm = () => {
         break;
     }
   };
-  // render() {
   return (
     <Form onSubmit={handleSubmit}>
       <Label>
